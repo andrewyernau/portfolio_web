@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-bun
+      - name: Lint workspaces
+        run: bun run --workspaces --if-present lint
+      - name: Typecheck
+        run: bun run typecheck
+      - name: Test
+        run: bun run test
+      - name: Build
+        run: bun run build
+
+  configuration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Compose model
+        run: docker compose config --quiet
+      - name: Validate Nginx configuration
+        run: |
+          docker run --rm --add-host api:127.0.0.1 \
+            -v "$PWD/nginx/nginx.conf:/etc/nginx/nginx.conf:ro" \
+            -v "$PWD/nginx/conf.d:/etc/nginx/conf.d:ro" \
+            -v "$PWD/nginx/snippets:/etc/nginx/snippets:ro" \
+            nginxinc/nginx-unprivileged:1.27-alpine nginx -t
+      - name: Validate Prometheus configuration and rules
+        run: |
+          docker run --rm --entrypoint promtool \
+            -v "$PWD/monitor/prometheus:/etc/prometheus:ro" \
+            prom/prometheus:v3.5.0 check config /etc/prometheus/prometheus.yml
+          docker run --rm --entrypoint promtool \
+            -v "$PWD/monitor/prometheus/rules:/work:ro" -w /work \
+            prom/prometheus:v3.5.0 test rules portfolio.test.yml
+      - name: Validate Alertmanager configuration
+        run: |
+          docker run --rm --entrypoint amtool \
+            -v "$PWD/monitor/alertmanager:/etc/alertmanager:ro" \
+            prom/alertmanager:v0.28.1 check-config /etc/alertmanager/alertmanager.yml
+      - name: Validate dashboard and shell scripts
+        run: |
+          jq empty monitor/grafana/dashboards/*.json
+          shellcheck infra/backup/scripts/*.sh
+      - name: Build backup image
+        run: docker build -t portfolio-backup:test infra/backup
+
+  integration:
+    runs-on: ubuntu-latest
+    needs: [quality, configuration]
+    env:
+      COMPOSE_PROJECT_NAME: portfolio-ci
+      POSTGRES_PASSWORD: ci_database_only
+      DATABASE_URL: postgresql://portfolio:ci_database_only@postgres:5432/portfolio
+      ANALYTICS_HMAC_SECRET: ci_only_analytics_secret_at_least_32_chars
+      GRAFANA_ADMIN_PASSWORD: ci_grafana_only
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and start the stack
+        run: docker compose up -d --build --wait
+      - name: Probe public boundary
+        run: |
+          curl --fail --silent --show-error http://127.0.0.1:8080/ >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:8080/api/v1/health/ready >/dev/null
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:8080/metrics)" = 404
+          curl --fail --silent --show-error http://127.0.0.1:9090/-/ready >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:3001/api/health >/dev/null
+          docker compose exec -T alertmanager wget -qO- http://127.0.0.1:9093/-/ready >/dev/null
+      - name: Create backup and prove restore
+        run: |
+          docker compose --profile ops run --rm backup /opt/backup/backup.sh
+          docker run -d --name portfolio-restore-postgres \
+            --network portfolio-ci_data \
+            -e POSTGRES_PASSWORD=restore_only \
+            postgres:17-alpine
+          for attempt in $(seq 1 30); do
+            if docker exec portfolio-restore-postgres pg_isready -U postgres; then break; fi
+            sleep 2
+          done
+          docker exec portfolio-restore-postgres pg_isready -U postgres
+          docker compose --profile ops run --rm \
+            -e PGHOST=portfolio-restore-postgres \
+            -e PGUSER=postgres \
+            -e PGPASSWORD=restore_only \
+            -e RESTORE_DATABASE=portfolio_restore \
+            -e ALLOW_RESTORE_DRILL=true \
+            backup /opt/backup/restore-drill.sh
+      - name: Collect logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail=200
+      - name: Stop stack
+        if: always()
+        run: |
+          docker rm -f portfolio-restore-postgres 2>/dev/null || true
+          docker compose --profile ops down --volumes --remove-orphans
+

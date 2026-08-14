@@ -1,0 +1,20 @@
+{
+  "name": "portfolio-platform",
+  "private": true,
+  "packageManager": "bun@1.3.8",
+  "workspaces": [
+    "api",
+    "frontend",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "bun run --workspaces --if-present build",
+    "typecheck": "bun run --workspaces --if-present typecheck",
+    "test": "bun run --workspaces --if-present test",
+    "check": "bun run typecheck && bun run test && bun run build",
+    "dev:api": "bun run --cwd api dev",
+    "dev:frontend": "bun run --cwd frontend dev",
+    "db:generate": "bun run --cwd api db:generate",
+    "db:migrate": "bun run --cwd api db:migrate"
+  }
+}

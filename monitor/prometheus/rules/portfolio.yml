@@ -1,0 +1,62 @@
+groups:
+  - name: portfolio-availability
+    rules:
+      - alert: PortfolioApiDown
+        expr: up{job="api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: Portfolio API is unavailable
+          description: Prometheus has not scraped the API successfully for two minutes.
+
+      - alert: PortfolioPostgresExporterDown
+        expr: up{job="postgres"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          service: postgres
+        annotations:
+          summary: PostgreSQL monitoring is unavailable
+          description: The PostgreSQL exporter has been unreachable for five minutes.
+
+  - name: portfolio-http
+    rules:
+      - alert: PortfolioApiHighErrorRatio
+        expr: |
+          sum(rate(portfolio_http_requests_total{job="api",status_class="5xx"}[5m]))
+          /
+          clamp_min(sum(rate(portfolio_http_requests_total{job="api"}[5m])), 0.001)
+          > 0.05
+        for: 10m
+        labels:
+          severity: warning
+          service: api
+        annotations:
+          summary: Portfolio API has a sustained 5xx ratio
+          description: More than 5% of API requests have returned 5xx for ten minutes.
+
+      - alert: PortfolioApiHighP95Latency
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (rate(portfolio_http_request_duration_seconds_bucket{job="api"}[5m]))
+          ) > 1
+        for: 10m
+        labels:
+          severity: warning
+          service: api
+        annotations:
+          summary: Portfolio API p95 latency is high
+          description: API p95 latency has exceeded one second for ten minutes.
+
+      - alert: PortfolioMailDeliveryFailures
+        expr: portfolio_outbox_messages{job="api",status="failed"} > 0
+        for: 1m
+        labels:
+          severity: warning
+          service: mail
+        annotations:
+          summary: Contact email delivery exhausted its retries
+          description: At least one accepted contact email is in terminal delivery failure.

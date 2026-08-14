@@ -1,0 +1,22 @@
+rule_files:
+  - portfolio.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'up{job="api",instance="api:3000"}'
+        values: '0 0 0 0 0'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: PortfolioApiDown
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              service: api
+              job: api
+              instance: api:3000
+            exp_annotations:
+              summary: Portfolio API is unavailable
+              description: Prometheus has not scraped the API successfully for two minutes.

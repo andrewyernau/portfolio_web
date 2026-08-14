@@ -1,0 +1,23 @@
+# Mount a rendered copy as /etc/alertmanager/alertmanager.yml in production.
+# Host names and addresses are configuration; the password is a mounted secret.
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: smtp.example.invalid:587
+  smtp_from: REPLACE_WITH_VERIFIED_SENDER
+  smtp_auth_username: REPLACE_WITH_USERNAME
+  smtp_auth_password_file: /run/secrets/alertmanager_smtp_password
+  smtp_require_tls: true
+
+route:
+  receiver: operations-email
+  group_by: [alertname, service]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+  - name: operations-email
+    email_configs:
+      - to: REPLACE_WITH_OPERATIONS_ADDRESS
+        send_resolved: true
+

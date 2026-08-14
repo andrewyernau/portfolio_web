@@ -1,0 +1,30 @@
+name: Set up Bun workspace
+description: Install the Bun version owned by package.json and restore dependencies deterministically
+
+runs:
+  using: composite
+  steps:
+    - name: Read Bun version
+      id: bun
+      shell: bash
+      run: |
+        version="$(node -p "const p=require('./package.json').packageManager; if(!p?.startsWith('bun@')) throw new Error('packageManager must pin bun@<version>'); p.slice(4)")"
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+
+    - name: Install Bun
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: ${{ steps.bun.outputs.version }}
+
+    - name: Cache Bun packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.bun/install/cache
+        key: bun-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('bun.lock') }}
+        restore-keys: |
+          bun-${{ runner.os }}-${{ runner.arch }}-
+
+    - name: Install dependencies
+      shell: bash
+      run: bun install --frozen-lockfile
+

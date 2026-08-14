@@ -1,0 +1,205 @@
+name: ${COMPOSE_PROJECT_NAME:-portfolio}
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio}
+      POSTGRES_USER: ${POSTGRES_USER:-portfolio}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-portfolio_local_only}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [data, observability]
+    security_opt: [no-new-privileges:true]
+
+  migrate:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+      target: runtime
+    command: ["bun", "run", "db:migrate"]
+    environment: &api-environment
+      APP_ENV: ${APP_ENV:-development}
+      API_PORT: 3000
+      DATABASE_URL: ${DATABASE_URL:-postgresql://portfolio:portfolio_local_only@postgres:5432/portfolio}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      TRUST_PROXY: ${TRUST_PROXY:-true}
+      TRUSTED_PROXY_HOPS: ${TRUSTED_PROXY_HOPS:-1}
+      ANALYTICS_HMAC_SECRET: ${ANALYTICS_HMAC_SECRET:-local_only_change_me_32_characters}
+      ANALYTICS_RETENTION_DAYS: ${ANALYTICS_RETENTION_DAYS:-90}
+      CONTACT_RETENTION_DAYS: ${CONTACT_RETENTION_DAYS:-90}
+      CONTACT_RATE_LIMIT_PER_HOUR: ${CONTACT_RATE_LIMIT_PER_HOUR:-5}
+      TRUSTED_PROXY_ADDRESSES: ${TRUSTED_PROXY_ADDRESSES:-}
+      COUNTRY_HEADER: ${COUNTRY_HEADER:-x-country-code}
+      SMTP_MODE: ${SMTP_MODE:-smtp}
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-portfolio@example.test}
+      SMTP_TO: ${SMTP_TO:-owner@example.test}
+      OUTBOX_POLL_MS: ${OUTBOX_POLL_MS:-1000}
+      OUTBOX_MAX_ATTEMPTS: ${OUTBOX_MAX_ATTEMPTS:-10}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [data]
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+      target: runtime
+    restart: unless-stopped
+    environment: *api-environment
+    command: ["bun", "run", "start"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://127.0.0.1:3000/api/v1/health/live').then(r=>{if(!r.ok)process.exit(1)})"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks: [app, data, observability]
+    security_opt: [no-new-privileges:true]
+
+  mail-worker:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+      target: runtime
+    restart: unless-stopped
+    environment: *api-environment
+    command: ["bun", "run", "worker"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      mailpit:
+        condition: service_started
+    networks: [data, mail, egress]
+    security_opt: [no-new-privileges:true]
+
+  web:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${PUBLIC_HTTP_PORT:-8080}:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks: [app]
+    security_opt: [no-new-privileges:true]
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${MAILPIT_HTTP_PORT:-8025}:8025"
+    networks: [mail, observability]
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.17.1
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: ${DATABASE_URL:-postgresql://portfolio:portfolio_local_only@postgres:5432/portfolio}?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [observability, data]
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+    volumes:
+      - ./monitor/prometheus:/etc/prometheus:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "127.0.0.1:${PROMETHEUS_HTTP_PORT:-9090}:9090"
+    depends_on: [api, alertmanager, postgres-exporter]
+    networks: [observability]
+    security_opt: [no-new-privileges:true]
+
+  alertmanager:
+    image: prom/alertmanager:v0.28.1
+    restart: unless-stopped
+    command: ["--config.file=/etc/alertmanager/alertmanager.yml", "--storage.path=/alertmanager"]
+    volumes:
+      - ./monitor/alertmanager:/etc/alertmanager:ro
+      - alertmanager-data:/alertmanager
+    depends_on: [mailpit]
+    networks: [observability, mail, egress]
+    security_opt: [no-new-privileges:true]
+
+  grafana:
+    image: grafana/grafana:12.0.2
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin_local_only}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+    volumes:
+      - ./monitor/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitor/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "127.0.0.1:${GRAFANA_HTTP_PORT:-3001}:3000"
+    depends_on: [prometheus]
+    networks: [observability]
+    security_opt: [no-new-privileges:true]
+
+  backup:
+    build:
+      context: infra/backup
+    profiles: [ops]
+    restart: unless-stopped
+    environment:
+      PGHOST: postgres
+      PGDATABASE: ${POSTGRES_DB:-portfolio}
+      PGUSER: ${POSTGRES_USER:-portfolio}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-portfolio_local_only}
+      BACKUP_SCHEDULE: ${BACKUP_SCHEDULE:-0 3 * * *}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-14}
+    volumes:
+      - ./backups:/backups
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [data]
+    security_opt: [no-new-privileges:true]
+
+networks:
+  app:
+  data:
+    internal: true
+  mail:
+    internal: true
+  observability:
+    internal: true
+  egress:
+
+volumes:
+  postgres-data:
+  prometheus-data:
+  alertmanager-data:
+  grafana-data:
