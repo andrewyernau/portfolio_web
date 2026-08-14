@@ -16,7 +16,7 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-bun
       - name: Lint workspaces
         run: bun run --workspaces --if-present lint
@@ -30,7 +30,7 @@ jobs:
   configuration:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Validate Compose model
         run: docker compose config --quiet
       - name: Validate Nginx configuration
@@ -70,7 +70,7 @@ jobs:
       ANALYTICS_HMAC_SECRET: ci_only_analytics_secret_at_least_32_chars
       GRAFANA_ADMIN_PASSWORD: ci_grafana_only
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build and start the stack
         run: docker compose up -d --build --wait
       - name: Probe public boundary
