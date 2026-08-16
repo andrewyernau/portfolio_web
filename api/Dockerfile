@@ -1,4 +1,4 @@
-FROM oven/bun:1.3.8-alpine AS dependencies
+FROM oven/bun:1.3.14-alpine AS dependencies
 WORKDIR /app
 
 COPY package.json bunfig.toml bun.lock ./
@@ -10,7 +10,7 @@ COPY frontend/package.json frontend/package.json
 # dependency tree into a separate stage, so use a portable hoisted layout.
 RUN bun install --frozen-lockfile --production --linker hoisted
 
-FROM oven/bun:1.3.8-alpine AS runtime
+FROM oven/bun:1.3.14-alpine AS runtime
 WORKDIR /app
 ENV APP_ENV=production
 
