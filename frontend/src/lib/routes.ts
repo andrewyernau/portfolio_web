@@ -1,10 +1,10 @@
 import type { Locale } from "../content";
 
-export type PageKey = "home" | "publications" | "contact";
+export type PageKey = "home" | "projects" | "contact";
 
 const slugs: Record<Locale, Record<PageKey, string>> = {
-  es: { home: "", publications: "publicaciones", contact: "contacto" },
-  en: { home: "", publications: "publications", contact: "contact" },
+  es: { home: "", projects: "proyectos", contact: "contacto" },
+  en: { home: "", projects: "projects", contact: "contact" },
 };
 
 export const pagePath = (locale: Locale, page: PageKey) =>
@@ -12,7 +12,7 @@ export const pagePath = (locale: Locale, page: PageKey) =>
 
 export function pageFromPath(pathname: string): PageKey {
   const segment = pathname.split("/").filter(Boolean)[1];
-  if (segment === "publicaciones" || segment === "publications") return "publications";
+  if (segment === "proyectos" || segment === "projects" || segment === "publicaciones" || segment === "publications") return "projects";
   if (segment === "contacto" || segment === "contact") return "contact";
   return "home";
 }

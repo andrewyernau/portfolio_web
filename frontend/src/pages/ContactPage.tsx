@@ -37,7 +37,10 @@ export function ContactPage() {
 
   return (
     <section className="section-wrap page-section contact-grid">
-      <PageIntro eyebrow={contact.eyebrow} title={contact.title} introduction={contact.introduction} />
+      <div>
+        <PageIntro title={contact.title} introduction={contact.introduction} />
+        <p className="direct-contact"><span>{contact.emailLabel}</span> <a href={"mailto:" + contact.email}>{contact.email}</a></p>
+      </div>
       <form className="contact-form" onSubmit={handleSubmit} aria-busy={state === "submitting"}>
         <div className="form-field">
           <label htmlFor="name">{contact.nameLabel}</label>

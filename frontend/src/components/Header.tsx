@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import type { Locale, PortfolioContent } from "../content";
-import { pageFromPath, pagePath, type PageKey } from "../lib/routes";
+import { pageFromPath, pagePath } from "../lib/routes";
 
 export function Header({ locale, content }: { locale: Locale; content: PortfolioContent }) {
   const location = useLocation();
@@ -11,7 +11,7 @@ export function Header({ locale, content }: { locale: Locale; content: Portfolio
     <header className="site-header">
       <div className="header-inner">
         <NavLink className="brand" to={pagePath(locale, "home")} aria-label={`${content.brand}, ${content.navigation.home}`}>
-          <span className="brand-mark" aria-hidden="true">N/A</span>
+          <span className="brand-mark" aria-hidden="true">{content.initials}</span>
           <span>
             <strong>{content.brand}</strong>
             <small>{content.role}</small>
@@ -19,21 +19,22 @@ export function Header({ locale, content }: { locale: Locale; content: Portfolio
         </NavLink>
 
         <nav className="primary-nav" aria-label={locale === "es" ? "Navegación principal" : "Primary navigation"}>
-          {(Object.keys(content.navigation) as PageKey[]).map((page) => (
-            <NavLink key={page} to={pagePath(locale, page)} end={page === "home"}>
-              {content.navigation[page]}
-            </NavLink>
-          ))}
+          <NavLink to={pagePath(locale, "home")} end>{content.navigation.home}</NavLink>
+          <NavLink to={pagePath(locale, "projects")}>{content.navigation.projects}</NavLink>
+          <NavLink to={pagePath(locale, "contact")}>{content.navigation.contact}</NavLink>
         </nav>
 
-        <NavLink
-          className="language-switch"
-          to={pagePath(otherLocale, currentPage)}
-          lang={otherLocale}
-          aria-label={locale === "es" ? "Switch to English" : "Cambiar a español"}
-        >
-          {otherLocale.toUpperCase()}
-        </NavLink>
+        <div className="header-actions">
+          <a className="resume-link" href="/main.pdf" download>{content.resumeLabel}</a>
+          <NavLink
+            className="language-switch"
+            to={pagePath(otherLocale, currentPage)}
+            lang={otherLocale}
+            aria-label={locale === "es" ? "Switch to English" : "Cambiar a español"}
+          >
+            {otherLocale.toUpperCase()}
+          </NavLink>
+        </div>
       </div>
     </header>
   );

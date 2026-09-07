@@ -11,6 +11,8 @@ export function App() {
       <Route path="/" element={<Navigate to="/es" replace />} />
       <Route path="/:locale" element={<SiteLayout />}>
         <Route index element={<HomePage />} />
+        <Route path="proyectos" element={<PublicationsPage />} />
+        <Route path="projects" element={<PublicationsPage />} />
         <Route path="publicaciones" element={<PublicationsPage />} />
         <Route path="publications" element={<PublicationsPage />} />
         <Route path="contacto" element={<ContactPage />} />

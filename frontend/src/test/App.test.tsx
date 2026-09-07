@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
@@ -12,33 +12,30 @@ describe("portfolio application", () => {
   it("renders a bilingual, accessible navigation and preserves the current page", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
     vi.stubGlobal("navigator", { ...navigator, sendBeacon: vi.fn(), doNotTrack: "1" });
-    renderAt("/es/publicaciones");
+    renderAt("/es/proyectos");
 
-    expect(screen.getByRole("heading", { name: "Publicaciones" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /proyectos que hacen visible/i })).toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: "Navegación principal" })).toBeInTheDocument();
     await userEvent.click(screen.getByRole("link", { name: "Switch to English" }));
-    expect(screen.getByRole("heading", { name: "Publications" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /projects that make my way/i })).toBeInTheDocument();
   });
 
-  it("uses coherent fallback content when the API is unavailable", async () => {
+  it("renders the versioned profile content", () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
     vi.stubGlobal("navigator", { ...navigator, sendBeacon: vi.fn(), doNotTrack: "1" });
     renderAt("/en");
 
-    expect(screen.getByRole("heading", { name: /turn complex problems/i })).toBeInTheDocument();
-    await waitFor(() => expect(fetch).toHaveBeenCalledWith("/api/v1/content/en", expect.any(Object)));
+    expect(screen.getByRole("heading", { name: /software, data and systems/i })).toBeInTheDocument();
   });
 
   it("submits contact data including the honeypot and shows success", async () => {
-    const fetchMock = vi.fn()
-      .mockRejectedValueOnce(new Error("content offline"))
-      .mockResolvedValueOnce(new Response(null, { status: 202 }));
+    const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 202 }));
     vi.stubGlobal("fetch", fetchMock);
     vi.stubGlobal("navigator", { ...navigator, sendBeacon: vi.fn(), doNotTrack: "1" });
     renderAt("/es/contacto");
 
     await userEvent.type(screen.getByLabelText("Nombre"), "Ada Lovelace");
-    await userEvent.type(screen.getByLabelText("Correo electrónico"), "ada@example.test");
+    await userEvent.type(screen.getByLabelText("Correo"), "ada@example.test");
     await userEvent.type(screen.getByLabelText("Mensaje"), "Me gustaría comentar un proyecto.");
     await userEvent.click(screen.getByRole("button", { name: "Enviar mensaje" }));
 
