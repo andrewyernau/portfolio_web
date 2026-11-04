@@ -8,7 +8,8 @@ import {
   sections,
   slugs,
   type Article,
-  type Content,
+  type Diagram,
+  type DiagramGroup,
   type Entry,
   type Locale,
   type Project,
@@ -121,6 +122,15 @@ export const Layout: FC<LayoutProps> = ({ locale, title, description, section, i
   );
 };
 
+const externalLinks = (project: Project) =>
+  (project.links ?? []).map((l) => l.href).filter((href) => href.startsWith("https://"));
+
+// The readable part of an address. A report's folder only adds noise to the list.
+const addressOf = (href: string) =>
+  decodeURI(href)
+    .replace(/^https:\/\//, "")
+    .replace(/\/tree\/.*$/, "");
+
 const Rows: FC<{ rows: Row[] }> = ({ rows }) => (
   <dl class="lines">
     {rows.map((r) => (
@@ -198,7 +208,6 @@ export const ProjectsPage: FC<{ locale: Locale }> = ({ locale }) => {
   return (
     <Layout locale={locale} section="projects" title={projects.title} description={projects.description} pager>
       <h1>{projects.title}</h1>
-      <p>{projects.intro}</p>
       {projects.groups.map((group) => (
         <>
           <h2>{group.title}</h2>
@@ -206,7 +215,12 @@ export const ProjectsPage: FC<{ locale: Locale }> = ({ locale }) => {
             {group.projects.map((p) => (
               <li class="line">
                 <h3><a href={itemPath(locale, "projects", p.id)}>{p.title}</a></h3>
-                <p>{p.summary}</p>
+                <div>
+                  <p>{p.summary}</p>
+                  {externalLinks(p).map((href) => (
+                    <p class="address"><a href={href}>{addressOf(href)}</a></p>
+                  ))}
+                </div>
               </li>
             ))}
           </ul>
@@ -215,6 +229,73 @@ export const ProjectsPage: FC<{ locale: Locale }> = ({ locale }) => {
     </Layout>
   );
 };
+
+const DiagramNode: FC<{ node: Row }> = ({ node }) => (
+  <div class="dg-node">
+    <strong>{node.label}</strong>
+    <span>{node.value}</span>
+  </div>
+);
+
+const DiagramGroups: FC<{ groups: DiagramGroup[] }> = ({ groups }) => (
+  <>
+    {groups.map((group) => (
+      <div class="dg-group">
+        <h4>{group.title}</h4>
+        <ul>
+          {group.items.map((item) => (
+            <li>
+              <span>{item.name}</span>
+              {item.address && (
+                <span class="dg-address">
+                  {group.linked ? <a href={`https://${item.address}`}>{item.address}</a> : item.address}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </>
+);
+
+const SystemDiagram: FC<{ diagram: Diagram }> = ({ diagram }) => (
+  <figure class="dg" aria-label={diagram.label}>
+    <div class="dg-map">
+      <div class="dg-public">
+        <DiagramNode node={diagram.internet} />
+        <p class="dg-link">{diagram.publicLink}</p>
+        <DiagramNode node={diagram.edge} />
+        <p class="dg-link dg-tunnel">{diagram.tunnelLink}</p>
+      </div>
+      <div class="dg-private">
+        <DiagramNode node={diagram.devices} />
+        <p class="dg-link dg-tunnel">{diagram.privateLink}</p>
+      </div>
+      <div class="dg-server">
+        <div class="dg-server-head">
+          <strong>{diagram.server.label}</strong>
+          <span>{diagram.server.value}</span>
+        </div>
+        <section class="dg-col dg-col-web">
+          <h4 class="dg-col-title">{diagram.throughProxy}</h4>
+          <DiagramNode node={diagram.proxy} />
+          <DiagramGroups groups={diagram.proxied} />
+        </section>
+        <section class="dg-col">
+          <h4 class="dg-col-title">{diagram.direct}</h4>
+          <DiagramGroups groups={diagram.unproxied} />
+        </section>
+        <section class="dg-col">
+          <h4 class="dg-col-title">{diagram.privateOnly}</h4>
+          <DiagramGroups groups={diagram.restricted} />
+        </section>
+        <p class="dg-backup">{diagram.backup}</p>
+      </div>
+    </div>
+    <figcaption>{diagram.caption}</figcaption>
+  </figure>
+);
 
 export const ProjectPage: FC<{ locale: Locale; project: Project }> = ({ locale, project }) => {
   const { ui } = content[locale];
@@ -229,7 +310,8 @@ export const ProjectPage: FC<{ locale: Locale; project: Project }> = ({ locale, 
         ))}
       </ul>
       <p class="tags">{project.tags.join(", ")}</p>
-      {project.links && (
+      {project.diagram && <SystemDiagram diagram={project.diagram} />}
+      {project.links && !project.diagram && (
         <ul class="stack">
           {project.links.map((l) => (
             <li><a href={l.href}>{l.label}</a></li>
@@ -245,7 +327,6 @@ export const ArticlesPage: FC<{ locale: Locale }> = ({ locale }) => {
   return (
     <Layout locale={locale} section="articles" title={articles.title} description={articles.description} pager>
       <h1>{articles.title}</h1>
-      <p>{articles.intro}</p>
       <h2>{articles.articlesTitle}</h2>
       <ul class="lines">
         {articles.items.map((a) => (

@@ -38,7 +38,7 @@ Inventario del texto y los conceptos del portfolio. La copia publicada vive en `
 
 - Nombres de clientes de Setenova: aparecen en el CV enviado a una empresa, no en una página pública ni en este repositorio, que también es público.
 - Teléfono, también en el PDF público.
-- Detalles internos de la infraestructura: IP, topología del proxy, túneles.
+- Detalles internos de la infraestructura: IP, puertos y direcciones de red. El diagrama de la página de autoalojamiento solo muestra nombres, y sale de `~/hosting/stack-map` (lista de servicios revisada el 2026-11-04).
 - Latencias y cifras de la memoria de prácticas ligadas a un cliente.
 - La aportación individual a tmuxxer y SmartEcoRutas, sin confirmar.
 

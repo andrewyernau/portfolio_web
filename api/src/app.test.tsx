@@ -91,6 +91,21 @@ describe("pages", () => {
     expect(html).toContain('href="/en/projects/kubo"');
   });
 
+  test("the projects page shows addresses and does not explain itself", async () => {
+    const html = await (await get("/en/projects")).text();
+    expect(html).not.toContain("its own page");
+    expect(html).toContain('<a href="https://kubo.csmak.com">kubo.csmak.com</a>');
+  });
+
+  test("the self-hosting page has the system diagram, with csmak.com and no addresses of the machines", async () => {
+    for (const path of ["/es/proyectos/selfhosting", "/en/projects/selfhosting"]) {
+      const html = await (await get(path)).text();
+      expect(html).toContain('class="dg"');
+      expect(html).toContain("csmak.com");
+      expect(html).not.toMatch(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/);
+    }
+  });
+
   test("a storage failure on analytics does not affect the page", async () => {
     const failing = { insert: () => { throw new Error("down"); } } as unknown as Database;
     expect((await get("/es", {}, failing)).status).toBe(200);

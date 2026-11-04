@@ -69,11 +69,13 @@ ul.stack > li { margin-block: 0.4rem; }
 .line:last-child { border-block-end: 0; }
 .line > *, .line dt, .line dd, .line h3 { margin: 0; }
 .line div > p { margin-block: 0.3rem 0; }
+.line div > p:first-child { margin-block-start: 0; }
 .line div > .entry-sub { margin-block: 0; }
 .line div > a { display: inline-block; margin-block-start: 0.3rem; }
 .line dt { font-weight: 600; }
 .when { font-family: var(--mono-font); font-size: 0.85rem; line-height: 1.75; color: var(--quiet); font-variant-numeric: tabular-nums; }
 .entry-sub { color: var(--quiet); margin-block: 0 0.3rem; }
+.address { font-family: var(--mono-font); font-size: 0.85rem; overflow-wrap: anywhere; margin-block: 0.3rem 0; }
 .tags { font-family: var(--mono-font); font-size: 0.85rem; color: var(--quiet); }
 
 /* Tables of results */
@@ -105,6 +107,31 @@ td.num { font-family: var(--mono-font); font-size: 0.9rem; font-variant-numeric:
 .notice { border: 1px solid var(--rule); padding: 0.8rem 1rem; margin: 0; max-inline-size: 34rem; }
 .notice strong { display: block; }
 
+/* System diagram: built from text, so it reflows and follows the theme */
+.dg { margin: 2.5rem 0 0; padding: 0; background: none; border: 0; border-radius: 0; overflow: visible; }
+.dg-map { display: grid; grid-template-columns: 2fr 1fr; column-gap: 1rem; font-size: 0.9rem; line-height: 1.4; }
+.dg-public, .dg-private { display: flex; flex-direction: column; }
+.dg-node { border: 1px solid var(--rule); padding: 0.55rem 0.75rem; }
+.dg-node strong, .dg-server-head strong { display: block; font-weight: 600; }
+.dg-node span, .dg-server-head span { color: var(--quiet); }
+.dg-link { position: relative; flex: 1; min-block-size: 3rem; margin: 0; padding-block: 0.9rem; padding-inline-start: calc(50% + 0.6rem); color: var(--quiet); font-size: 0.85rem; max-inline-size: none; }
+.dg-link::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 50%; border-inline-start: 1px solid var(--rule); }
+.dg-tunnel::before { border-inline-start: 2px dashed var(--rule); }
+.dg-server { grid-column: 1 / -1; display: grid; grid-template-columns: 2fr 1fr 1fr; column-gap: 1rem; row-gap: 0.75rem; align-items: start; border: 2px solid var(--rule); padding: 0.75rem; }
+.dg-server-head { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0 0.6rem; align-items: baseline; }
+.dg-col { display: grid; gap: 0.6rem; min-inline-size: 0; margin: 0; padding: 0; }
+.dg h4 { font: inherit; font-weight: 600; margin: 0; }
+.dg-col-title { padding-block-end: 0.3rem; border-block-end: 1px solid var(--rule); }
+.dg-col-web { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; column-gap: 1rem; }
+.dg-col-web > .dg-col-title, .dg-col-web > .dg-node { grid-column: 1 / -1; }
+.dg-group { display: grid; gap: 0.25rem; }
+.dg-group h4 { color: var(--quiet); font-weight: 400; }
+.dg-group ul { list-style: none; margin: 0; padding: 0; }
+.dg-group li { display: grid; margin: 0; padding-block: 0.3rem; border-block-start: 1px solid var(--hairline); max-inline-size: none; }
+.dg-address { font-family: var(--mono-font); font-size: 0.75rem; color: var(--quiet); overflow-wrap: anywhere; }
+.dg-backup { grid-column: 1 / -1; margin: 0; padding-block-start: 0.6rem; border-block-start: 1px solid var(--rule); max-inline-size: none; }
+.dg figcaption { margin-block-start: 0.9rem; color: var(--quiet); font-size: 0.9rem; max-inline-size: 68ch; }
+
 /* Next and previous, at the foot of each section */
 .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-block-start: 4rem; padding: 0.9rem 0 0; background: none; border: 0; border-block-start: 1px solid var(--rule); }
 .pager a { text-decoration: none; display: block; font-weight: 600; }
@@ -120,6 +147,12 @@ td.num { font-family: var(--mono-font); font-size: 0.9rem; font-variant-numeric:
   main.wrap { padding-block: 2rem 3rem; }
   .line { grid-template-columns: minmax(0, 1fr); }
   .site-nav { gap: 0.25rem 1rem; }
+  /* One column, with Tailscale joining the server from below */
+  .dg-map { grid-template-columns: minmax(0, 1fr); }
+  .dg-public { order: 1; }
+  .dg-server { order: 2; grid-template-columns: minmax(0, 1fr); }
+  .dg-col-web { grid-template-columns: minmax(0, 1fr); }
+  .dg-private { order: 3; flex-direction: column-reverse; }
 }
 
 @media print {

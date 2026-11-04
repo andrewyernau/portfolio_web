@@ -17,6 +17,27 @@ export type Link = { label: string; href: string };
 export type Row = { label: string; value: string };
 export type Entry = { when: string; title: string; where?: string; points?: string[]; text?: string };
 
+export type DiagramGroup = { title: string; linked?: boolean; items: { name: string; address?: string }[] };
+export type Diagram = {
+  label: string;
+  caption: string;
+  internet: Row;
+  edge: Row;
+  devices: Row;
+  publicLink: string;
+  tunnelLink: string;
+  privateLink: string;
+  server: Row;
+  throughProxy: string;
+  proxy: Row;
+  direct: string;
+  privateOnly: string;
+  proxied: DiagramGroup[];
+  unproxied: DiagramGroup[];
+  restricted: DiagramGroup[];
+  backup: string;
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -24,6 +45,7 @@ export type Project = {
   details: string[];
   tags: string[];
   links?: Link[];
+  diagram?: Diagram;
 };
 export type ProjectGroup = { title: string; projects: Project[] };
 
@@ -73,11 +95,10 @@ export type Content = {
     otherTitle: string;
     other: Entry[];
   };
-  projects: { title: string; description: string; intro: string; groups: ProjectGroup[] };
+  projects: { title: string; description: string; groups: ProjectGroup[] };
   articles: {
     title: string;
     description: string;
-    intro: string;
     articlesTitle: string;
     items: Article[];
     reportsTitle: string;
@@ -223,7 +244,6 @@ export const content: Record<Locale, Content> = {
     projects: {
       title: "Proyectos",
       description: "Productos propios, herramientas, investigación y trabajo de telecomunicaciones y hardware.",
-      intro: "Trabajo personal, académico y compartido. Cada proyecto tiene su propia página, con lo que hace y con qué está hecho.",
       groups: [
         {
           title: "Productos propios",
@@ -250,6 +270,65 @@ export const content: Record<Locale, Content> = {
               ],
               tags: ["Python", "Docker", "PDF"],
               links: [{ label: "nutria.csmak.com", href: "https://nutria.csmak.com" }],
+            },
+          ],
+        },
+        {
+          title: "Infraestructura",
+          projects: [
+            {
+              id: "selfhosting",
+              title: "Autoalojamiento y Linux",
+              summary: "El sistema donde vive este sitio: un servidor propio con servicios en Docker, detrás de un VPS de entrada y un túnel WireGuard.",
+              details: [
+                "Práctica continua de despliegue, administración de servidores y redes aplicada a servicios reales.",
+                "Aloja mis productos y webs, como CSMak, Kubo y Nutria, y webs para terceros, como Kebab Oriental y la Asociación Juvenil Gambito.",
+              ],
+              tags: ["Linux", "Docker", "Caddy", "HAProxy", "WireGuard", "Tailscale", "restic"],
+              links: [
+                { label: "csmak.com", href: "https://csmak.com" },
+                { label: "kebab-oriental.com", href: "https://kebab-oriental.com" },
+                { label: "ajgambitopt.com", href: "https://ajgambitopt.com" },
+              ],
+              diagram: {
+                label: "Esquema del sistema autoalojado",
+                caption: "Todo el tráfico público entra por el VPS y llega al servidor por el túnel, sin abrir puertos en su red. Lo privado solo es accesible por Tailscale.",
+                internet: { label: "Internet", value: "Visitantes, jugadores y correo" },
+                edge: { label: "VPS de entrada", value: "HAProxy y mc-router. Limita conexiones por IP y oculta el servidor." },
+                devices: { label: "Mis dispositivos", value: "Teléfono y ordenadores" },
+                publicLink: "HTTPS, juegos y correo",
+                tunnelLink: "Túnel WireGuard",
+                privateLink: "Tailscale",
+                server: { label: "Servidor", value: "Linux y contenedores Docker" },
+                throughProxy: "Webs",
+                proxy: { label: "Caddy", value: "Certificados y proxy inverso" },
+                direct: "Directo por el túnel",
+                privateOnly: "Solo por Tailscale",
+                proxied: [
+                  { title: "Públicas", linked: true, items: [
+                  { name: "CSMak", address: "csmak.com" },
+                  { name: "Kubo", address: "kubo.csmak.com" },
+                  { name: "Nutria", address: "nutria.csmak.com" },
+                  { name: "Kebab Oriental", address: "kebab-oriental.com" },
+                  { name: "AJ Gambito", address: "ajgambitopt.com" },
+                  { name: "Portfolio", address: "yernau.com" },
+                  { name: "OTracker", address: "tracker.yernau.com" },
+                ] },
+                  { title: "Herramientas", items: [
+                    { name: "Panel de juegos", address: "panel.kubo.csmak.com" },
+                    { name: "Webmail", address: "webmail.csmak.com" },
+                    { name: "Notas", address: "notes.yernau.com" },
+                  ] },
+                ],
+                unproxied: [
+                  { title: "Juegos", items: [{ name: "Wings" }, { name: "Servidores en Docker" }] },
+                  { title: "Correo", items: [{ name: "Stalwart" }] },
+                ],
+                restricted: [
+                  { title: "Personal", items: [{ name: "Gestor de contraseñas" }, { name: "Sincronización" }, { name: "SSH" }] },
+                ],
+                backup: "Copia diaria cifrada con restic hacia el VPS, en modo solo añadir.",
+              },
             },
           ],
         },
@@ -366,20 +445,6 @@ export const content: Record<Locale, Content> = {
           title: "Otros",
           projects: [
             {
-              id: "selfhosting",
-              title: "Autoalojamiento y Linux",
-              summary: "El entorno donde vive este sitio: servicios en Docker detrás de un proxy inverso, sobre Linux, gestionados por mí.",
-              details: [
-                "Práctica continua de despliegue, administración de servidores y redes aplicada a servicios reales.",
-                "Incluye webs para terceros, como Kebab Oriental y la Asociación Juvenil Gambito.",
-              ],
-              tags: ["Linux", "Docker", "Caddy", "HAProxy", "Redes"],
-              links: [
-                { label: "kebab-oriental.com", href: "https://kebab-oriental.com" },
-                { label: "ajgambitopt.com", href: "https://ajgambitopt.com" },
-              ],
-            },
-            {
               id: "rust-api",
               title: "API backend en Rust",
               summary: "API con Axum que conectaba un frontend con una base de datos, integraba servicios externos y validaba usuarios registrados.",
@@ -401,7 +466,6 @@ export const content: Record<Locale, Content> = {
     articles: {
       title: "Artículos",
       description: "Artículos y documentación técnica de André Yermak Naumenko.",
-      intro: "Lo que he escrito con calma, y los informes técnicos de la carrera que son públicos.",
       articlesTitle: "Artículos",
       items: [
         {
@@ -586,7 +650,6 @@ export const content: Record<Locale, Content> = {
     projects: {
       title: "Projects",
       description: "Own products, tools, research, and telecommunications and hardware work.",
-      intro: "Personal, academic and shared work. Each project has its own page, with what it does and what it is made of.",
       groups: [
         {
           title: "Own products",
@@ -613,6 +676,65 @@ export const content: Record<Locale, Content> = {
               ],
               tags: ["Python", "Docker", "PDF"],
               links: [{ label: "nutria.csmak.com", href: "https://nutria.csmak.com" }],
+            },
+          ],
+        },
+        {
+          title: "Infrastructure",
+          projects: [
+            {
+              id: "selfhosting",
+              title: "Self-hosting and Linux",
+              summary: "The system this site lives on: my own server with Docker services, behind an edge VPS and a WireGuard tunnel.",
+              details: [
+                "An ongoing practice of deployment, server administration and networking on real services.",
+                "It runs my products and sites, such as CSMak, Kubo and Nutria, and sites for others, such as Kebab Oriental and the Gambito youth association.",
+              ],
+              tags: ["Linux", "Docker", "Caddy", "HAProxy", "WireGuard", "Tailscale", "restic"],
+              links: [
+                { label: "csmak.com", href: "https://csmak.com" },
+                { label: "kebab-oriental.com", href: "https://kebab-oriental.com" },
+                { label: "ajgambitopt.com", href: "https://ajgambitopt.com" },
+              ],
+              diagram: {
+                label: "Diagram of the self-hosted system",
+                caption: "All public traffic enters through the VPS and reaches the server over the tunnel, with no ports open on its network. Private services are only reachable over Tailscale.",
+                internet: { label: "Internet", value: "Visitors, players and mail" },
+                edge: { label: "Edge VPS", value: "HAProxy and mc-router. Limits connections per IP and hides the server." },
+                devices: { label: "My devices", value: "Phone and computers" },
+                publicLink: "HTTPS, games and mail",
+                tunnelLink: "WireGuard tunnel",
+                privateLink: "Tailscale",
+                server: { label: "Server", value: "Linux and Docker containers" },
+                throughProxy: "Web",
+                proxy: { label: "Caddy", value: "Certificates and reverse proxy" },
+                direct: "Straight through the tunnel",
+                privateOnly: "Tailscale only",
+                proxied: [
+                  { title: "Public", linked: true, items: [
+                  { name: "CSMak", address: "csmak.com" },
+                  { name: "Kubo", address: "kubo.csmak.com" },
+                  { name: "Nutria", address: "nutria.csmak.com" },
+                  { name: "Kebab Oriental", address: "kebab-oriental.com" },
+                  { name: "AJ Gambito", address: "ajgambitopt.com" },
+                  { name: "Portfolio", address: "yernau.com" },
+                  { name: "OTracker", address: "tracker.yernau.com" },
+                ] },
+                  { title: "Tools", items: [
+                    { name: "Game panel", address: "panel.kubo.csmak.com" },
+                    { name: "Webmail", address: "webmail.csmak.com" },
+                    { name: "Notes", address: "notes.yernau.com" },
+                  ] },
+                ],
+                unproxied: [
+                  { title: "Games", items: [{ name: "Wings" }, { name: "Docker game servers" }] },
+                  { title: "Mail", items: [{ name: "Stalwart" }] },
+                ],
+                restricted: [
+                  { title: "Personal", items: [{ name: "Password manager" }, { name: "Sync" }, { name: "SSH" }] },
+                ],
+                backup: "Daily backup encrypted with restic to the VPS, in append-only mode.",
+              },
             },
           ],
         },
@@ -729,20 +851,6 @@ export const content: Record<Locale, Content> = {
           title: "Other",
           projects: [
             {
-              id: "selfhosting",
-              title: "Self-hosting and Linux",
-              summary: "The environment this site lives in: Docker services behind a reverse proxy, on Linux, run by me.",
-              details: [
-                "An ongoing practice of deployment, server administration and networking on real services.",
-                "Includes sites for others, such as Kebab Oriental and the Gambito youth association.",
-              ],
-              tags: ["Linux", "Docker", "Caddy", "HAProxy", "Networking"],
-              links: [
-                { label: "kebab-oriental.com", href: "https://kebab-oriental.com" },
-                { label: "ajgambitopt.com", href: "https://ajgambitopt.com" },
-              ],
-            },
-            {
               id: "rust-api",
               title: "Rust backend API",
               summary: "An Axum API that connected a frontend to a database, integrated external services and validated registered users.",
@@ -764,7 +872,6 @@ export const content: Record<Locale, Content> = {
     articles: {
       title: "Articles",
       description: "Articles and technical documentation by André Yermak Naumenko.",
-      intro: "What I have written with some care, and the technical reports from my degree that are public.",
       articlesTitle: "Articles",
       items: [
         {
