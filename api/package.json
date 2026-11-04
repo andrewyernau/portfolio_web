@@ -13,9 +13,6 @@
     "db:migrate": "bun src/db/migrate.ts"
   },
   "dependencies": {
-    "@hono/swagger-ui": "^0.6.1",
-    "@hono/zod-openapi": "^1.1.5",
-    "@portfolio/contracts": "workspace:*",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.10.6",
     "nodemailer": "^9.0.5",

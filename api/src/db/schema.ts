@@ -1,4 +1,3 @@
-import type { SiteContent } from "@portfolio/contracts";
 import {
   bigint,
   index,
@@ -15,7 +14,7 @@ import {
 
 export const siteContent = pgTable("site_content", {
   locale: varchar("locale", { length: 2 }).primaryKey(),
-  payload: jsonb("payload").$type<SiteContent>().notNull(),
+  payload: jsonb("payload").notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 

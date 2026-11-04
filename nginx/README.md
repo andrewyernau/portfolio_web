@@ -1,7 +1,7 @@
 # Public edge
 
-Nginx is the only public container. It serves the immutable frontend build on
-port 8080 and proxies the supported API surface to `api:3000`. Prometheus,
+Nginx is the only public container. It serves `static/` on port 8080 and proxies
+every page to `api:3000`, which renders the HTML. Prometheus,
 Grafana, Alertmanager, Mailpit, PostgreSQL, and `/metrics` remain private.
 
 The access log intentionally records only method, normalized `$uri`, status,

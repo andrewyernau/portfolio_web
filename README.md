@@ -4,7 +4,7 @@ This repository is a production-shaped foundation for a personal portfolio whose
 
 ## System shape
 
-The browser reaches only Nginx. Nginx serves the compiled React application and forwards the supported `/api` surface to a Bun/Hono service. PostgreSQL stores content, contact delivery state, and coarse first-party analytics. The worker delivers accepted contact messages through SMTP without making the visitor wait for the mail provider.
+The browser reaches only Nginx. Nginx serves the files in `static/` and forwards every page to a Bun/Hono service that renders HTML on the server (`api/src/site/`). [htmx](https://htmx.org) gives pages their navigation and the contact form its submission, and everything also works without JavaScript. The look starts from [missing.css](https://missing.style), plus a short `static/site.css`. PostgreSQL stores contact delivery state and coarse first-party analytics. The worker delivers accepted contact messages through SMTP without making the visitor wait for the mail provider.
 
 Operational telemetry stays on a private Compose network. Prometheus owns time-series collection, Grafana owns visualization, and Alertmanager owns alert routing. Mailpit is the safe local SMTP target for both contact mail and alerts.
 
@@ -25,7 +25,7 @@ Start the full local stack:
 docker compose up --build --wait
 ```
 
-The public site is on `http://localhost:8080`. Grafana, Prometheus, and Mailpit bind to localhost on the ports declared in `.env.example`; they are intentionally not reachable through Nginx. Swagger is available below the API prefix while development documentation is enabled.
+The public site is on `http://localhost:8080`. The copy lives in `api/src/site/content.ts`, with its sources in [docs/portfolio-content.md](docs/portfolio-content.md). Grafana, Prometheus, and Mailpit bind to localhost on the ports declared in `.env.example`; they are intentionally not reachable through Nginx.
 
 Backups are opt-in because a local bind mount is not a production backup destination:
 
