@@ -80,9 +80,9 @@ export const Layout: FC<LayoutProps> = ({ locale, title, description, section, i
         <a class="skip" href="#content">{ui.skip}</a>
         <header class="site-header">
           <div class="wrap">
-            <a class="site-name" href={`/${locale}`}>{NAME}</a>
+            <a class="site-name" href={`/${locale}`} aria-current={section === "home" ? "page" : undefined}>{NAME}</a>
             <nav class="site-nav" aria-label={ui.navLabel}>
-              {sections.map((s) => (
+              {sections.filter((s) => s !== "home").map((s) => (
                 <a href={sectionPath(locale, s)} aria-current={s === section ? "page" : undefined}>{ui.nav[s]}</a>
               ))}
               {/* A full load, so the document's lang changes with the text. */}

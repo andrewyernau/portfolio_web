@@ -106,6 +106,13 @@ describe("pages", () => {
     }
   });
 
+  test("the name is the only link to home in the header", async () => {
+    const html = await (await get("/es/cv")).text();
+    const nav = html.slice(html.indexOf('class="site-nav"'), html.indexOf("</nav>"));
+    expect(nav).not.toContain('href="/es"');
+    expect(html).toContain('class="site-name" href="/es"');
+  });
+
   test("a storage failure on analytics does not affect the page", async () => {
     const failing = { insert: () => { throw new Error("down"); } } as unknown as Database;
     expect((await get("/es", {}, failing)).status).toBe(200);
