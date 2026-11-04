@@ -93,7 +93,7 @@ export async function deliverOne(
     await client`
       UPDATE contact_outbox
       SET status = ${terminal ? "failed" : "retry"},
-          available_at = ${availableAt},
+          available_at = ${availableAt.toISOString()}::timestamptz,
           locked_at = NULL,
           locked_by = NULL,
           last_error_code = ${boundedErrorCode(error)}
