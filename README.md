@@ -40,3 +40,7 @@ Use the restore drill under `infra/backup` before trusting a backup. Production 
 Analytics collect no cookies, raw IP addresses, raw user-agent strings, query strings, or persistent visitor identifier. Daily network-derived HMACs are still pseudonymous data, not anonymous data. A real launch therefore needs a transparent privacy notice, a justified legal basis, and retention values that match the stated purpose. Contact details have their own purpose and lifecycle.
 
 Production must replace all local secrets, terminate TLS at a declared edge, restrict trusted proxy headers, and choose a deployment target. CI deliberately builds and publishes artifacts without pretending those unresolved choices have been made.
+
+## Stylesheet
+
+Pages load `static/missing.trimmed.css`, generated from `static/vendor/missing-1.3.0.min.css` by dropping the rules the views cannot match. After adding an element, class or attribute to the views, run `bun run --cwd api css:trim`. A test fails until the file is up to date.

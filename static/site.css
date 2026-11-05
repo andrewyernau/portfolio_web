@@ -36,6 +36,7 @@ a:hover { text-decoration-thickness: 2px; color: inherit; }
 
 .skip { position: absolute; inset-block-start: -4rem; padding: 0.5rem 1rem; background: var(--ink); color: var(--bg); }
 .skip:focus { inset-block-start: 0; }
+.skip:focus-visible { color: var(--bg); }
 
 .wrap { inline-size: min(100% - 2.5rem, var(--line-length)); margin-inline: auto; }
 

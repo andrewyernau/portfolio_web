@@ -4,6 +4,7 @@ import { createApp } from "./app";
 import { parseConfig } from "./config";
 import { content, sections, type Locale } from "./site/content";
 import { sectionPath } from "./site/views";
+import { TRIMMED, trim } from "../scripts/trim-css";
 
 const config = parseConfig({
   APP_ENV: "test",
@@ -51,7 +52,7 @@ describe("pages", () => {
       const html = await response.text();
       expect(html.startsWith("<!doctype html>")).toBe(true);
       expect(html).toContain("/static/vendor/htmx-2.0.11.min.js");
-      expect(html).toContain("/static/vendor/missing-1.3.0.min.css");
+      expect(html).toContain("/static/missing.trimmed.css");
       expect(html).toContain('hx-boost="true"');
     }
   });
@@ -70,6 +71,11 @@ describe("pages", () => {
     for (const weight of [400, 600]) {
       expect(html).toContain(`<link rel="preload" href="/static/vendor/fonts/ibm-plex-sans-latin-${weight}-normal.woff2"`);
     }
+  });
+
+  test("the trimmed stylesheet matches the views", async () => {
+    const committed = await Bun.file(new URL(`../../${TRIMMED}`, import.meta.url).pathname).text();
+    expect(committed).toBe(trim());
   });
 
   test("copy does not introduce phrases with a colon", async () => {

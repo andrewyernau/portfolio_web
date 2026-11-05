@@ -55,6 +55,7 @@ function versioned(file: string): string {
   return `/static/${file}?v=${createHash("sha256").update(bytes).digest("hex").slice(0, 12)}`;
 }
 
+const MISSING_CSS = versioned("missing.trimmed.css");
 const SITE_CSS = versioned("site.css");
 const SITE_JS = versioned("site.js");
 
@@ -83,7 +84,7 @@ export const Layout: FC<LayoutProps> = ({ locale, title, description, section, i
         <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
         <link rel="preload" href="/static/vendor/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
         <link rel="preload" href="/static/vendor/fonts/ibm-plex-sans-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
-        <link rel="stylesheet" href="/static/vendor/missing-1.3.0.min.css" />
+        <link rel="stylesheet" href={MISSING_CSS} />
         <link rel="stylesheet" href={SITE_CSS} />
         <script src="/static/vendor/htmx-2.0.11.min.js" defer></script>
         <script src={SITE_JS} defer></script>
