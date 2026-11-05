@@ -189,7 +189,7 @@ export const content: Record<Locale, Content> = {
           where: "Setenova",
           points: [
             "Integración y procesamiento de fuentes heterogéneas, análisis de datos de protocolos en tiempo real y visualización de datos de tráfico.",
-            "Streaming de vídeo por RTSP con MediaMTX, detección con YOLO, mensajería con Valkey y paneles en React.",
+            "Streaming de vídeo por RTSP con MediaMTX, detección con modelos como YOLO y RF-DETR, mensajería con Kafka y visualización de toda esa información a nivel de negocio en el frontend.",
           ],
         },
       ],
@@ -595,7 +595,7 @@ export const content: Record<Locale, Content> = {
           where: "Setenova",
           points: [
             "Integrated and processed heterogeneous sources, analysed real-time protocol data and visualised traffic data.",
-            "Video streaming over RTSP with MediaMTX, detection with YOLO, messaging with Valkey and dashboards in React.",
+            "Video streaming over RTSP with MediaMTX, detection with models such as YOLO and RF-DETR, messaging with Kafka, and all of that information visualised at business level in the frontend.",
           ],
         },
       ],
