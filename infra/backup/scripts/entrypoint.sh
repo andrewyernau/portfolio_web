@@ -17,6 +17,8 @@ if [ -n "${BACKUP_SCHEDULE:-}" ]; then
   # Validate in a subshell so the container command in "$@" remains intact.
   if ! (
     # Intentional field splitting for the five cron fields.
+    # Without -f, each * would expand to the files in the current directory.
+    set -f
     # shellcheck disable=SC2086
     set -- $BACKUP_SCHEDULE
     [ "$#" -eq 5 ] || exit 1
