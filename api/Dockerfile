@@ -17,6 +17,7 @@ ENV APP_ENV=production
 COPY package.json bunfig.toml ./
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY api ./api
+COPY static/site.css static/site.js ./static/
 COPY postgres/migrations ./postgres/migrations
 
 WORKDIR /app/api

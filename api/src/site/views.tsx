@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import type { Child, FC } from "hono/jsx";
 import {
   EMAIL,
@@ -47,6 +49,15 @@ type LayoutProps = {
   children?: Child;
 };
 
+/** The query changes with the file, so Nginx can let browsers keep it for a year. */
+function versioned(file: string): string {
+  const bytes = readFileSync(new URL(`../../../static/${file}`, import.meta.url));
+  return `/static/${file}?v=${createHash("sha256").update(bytes).digest("hex").slice(0, 12)}`;
+}
+
+const SITE_CSS = versioned("site.css");
+const SITE_JS = versioned("site.js");
+
 export const Layout: FC<LayoutProps> = ({ locale, title, description, section, item, pager, children }) => {
   const { ui } = content[locale];
   const pathFor = (l: Locale) => {
@@ -71,10 +82,11 @@ export const Layout: FC<LayoutProps> = ({ locale, title, description, section, i
         <link rel="alternate" hreflang={other(locale)} href={`https://yernau.com${pathFor(other(locale))}`} />
         <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
         <link rel="preload" href="/static/vendor/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+        <link rel="preload" href="/static/vendor/fonts/ibm-plex-sans-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
         <link rel="stylesheet" href="/static/vendor/missing-1.3.0.min.css" />
-        <link rel="stylesheet" href="/static/site.css" />
+        <link rel="stylesheet" href={SITE_CSS} />
         <script src="/static/vendor/htmx-2.0.11.min.js" defer></script>
-        <script src="/static/site.js" defer></script>
+        <script src={SITE_JS} defer></script>
       </head>
       <body hx-boost="true">
         <a class="skip" href="#content">{ui.skip}</a>

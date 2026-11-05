@@ -63,6 +63,15 @@ describe("pages", () => {
     }
   });
 
+  test("links its own assets with a content version and preloads both text weights", async () => {
+    const html = await (await get("/es")).text();
+    expect(html).toMatch(/href="\/static\/site\.css\?v=[0-9a-f]{12}"/);
+    expect(html).toMatch(/src="\/static\/site\.js\?v=[0-9a-f]{12}"/);
+    for (const weight of [400, 600]) {
+      expect(html).toContain(`<link rel="preload" href="/static/vendor/fonts/ibm-plex-sans-latin-${weight}-normal.woff2"`);
+    }
+  });
+
   test("copy does not introduce phrases with a colon", async () => {
     for (const path of allPages()) {
       const html = await (await get(path)).text();
