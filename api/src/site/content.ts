@@ -152,7 +152,7 @@ export const content: Record<Locale, Content> = {
       description: "Ingeniero telemático e ingeniero de datos en Murcia. Datos en tiempo real, infraestructura propia, telecomunicaciones y hardware.",
       lede: "Ingeniero telemático. Trabajo como ingeniero de datos en Setenova y mantengo mi propia infraestructura desde 2020.",
       paragraphs: [
-        "Estudié en la Universidad Politécnica de Cartagena, con intercambios en Dublín y Malta. Hoy trabajo con datos en tiempo real: una plataforma de visión por computador con más de 20 cámaras simultáneas y entre 100 y 200 fotogramas por segundo de metadatos, desplegada tanto on-premise como en la nube.",
+        "Estudié en la Universidad Politécnica de Cartagena. He trabajado en una plataforma de visión por computador para seguridad y en proyectos de ciudades inteligentes, con muchas soluciones on-premise.",
         "Fuera del trabajo opero mis propios servicios en Linux, entre ellos dos productos SaaS. Ahí he aprendido casi todo lo que sé sobre mantener un sistema en pie, también porque se me ha roto más de una vez.",
         "Me gusta automatizar lo que se repite y aprender rápido lo que todavía no sé.",
       ],
@@ -160,7 +160,7 @@ export const content: Record<Locale, Content> = {
       areas: [
         { label: "Datos", value: "Flujos en tiempo real con Kafka, PostgreSQL y S3 detrás de FastAPI. Pipelines con Airflow, arquitectura medallion y técnicas de series temporales para envejecer el dato." },
         { label: "Infraestructura", value: "Linux, Docker, HAProxy, OpenTofu y Prometheus. Despliegues on-premise y en la nube, validados con SLA y objetivos medibles." },
-        { label: "Telecomunicaciones", value: "La parte de teleco de la carrera: señales, radioenlaces y propagación, técnicas de acceso múltiple y redes con TCP/IP, MPLS y OSPF." },
+        { label: "Telecomunicaciones", value: "Lo que vi en la carrera sobre señales, radioenlaces y propagación, técnicas de acceso múltiple y redes con TCP/IP, MPLS y OSPF." },
         { label: "Hardware", value: "Diseño digital en VHDL sobre ZedBoard, ensamblador para el PIC16F876A y sistemas embebidos en el eCTF de MITRE." },
         { label: "Software", value: "Python, Rust, TypeScript, Java, C y SQL. Herramientas de desarrollo, backend y experimentos de aprendizaje automático." },
       ],
@@ -200,15 +200,15 @@ export const content: Record<Locale, Content> = {
           title: "Servicios autoalojados en Linux",
           where: "Dominios, productos SaaS y webs que opero yo mismo",
           points: [
-            "Varios dominios y dos productos propios: Kubo, alojamiento de servidores de juegos, y Nutria, nutrición y entrenamiento.",
+            "Varios dominios y dos productos propios, Kubo para alojar servidores de juegos y Nutria para nutrición y entrenamiento.",
             "Docker, HAProxy, Prometheus, OpenTofu, DNS, correo y certificados de Let's Encrypt.",
-            "Dos caídas reales, ambas recuperadas: una dependencia de Node rota y un panel de juegos completo restaurado desde copias. Encontré la causa y cambié el proceso en los dos casos.",
+            "Dos caídas reales, ambas recuperadas. Una fue una dependencia de Node rota y la otra un panel de juegos completo que restauré desde copias. Encontré la causa y cambié el proceso en los dos casos.",
           ],
         },
       ],
       educationTitle: "Formación",
       education: [
-        { when: "2021 a 2026", title: "Grado en Ingeniería Telemática", where: "Universidad Politécnica de Cartagena. Intercambios en Dublín y Malta.", text: "Trabajo de Fin de Grado sobre estilometría en ajedrez: 10/10 y propuesto a matrícula de honor." },
+        { when: "2021 a 2026", title: "Grado en Ingeniería Telemática", where: "Universidad Politécnica de Cartagena. Intercambios en Dublín y Malta.", text: "Trabajo de Fin de Grado sobre estilometría en ajedrez, con un 10/10 y propuesto a matrícula de honor." },
         { when: "2018 a 2024", title: "Conservatorio Profesional de Música" },
       ],
       eventsTitle: "Eventos y reconocimientos",
@@ -251,9 +251,9 @@ export const content: Record<Locale, Content> = {
             {
               id: "kubo",
               title: "Kubo",
-              summary: "Alojamiento de servidores de juegos: Minecraft Java y Bedrock, juego cruzado entre ambos, y bases de datos PostgreSQL, Redis y MongoDB.",
+              summary: "Alojamiento de servidores de Minecraft Java y Bedrock, con juego cruzado entre ambos, y bases de datos PostgreSQL, Redis y MongoDB.",
               details: [
-                "Tienda y puente de aprovisionamiento entre Stripe y el panel de juegos: el cliente ve recursos exactos y fijos, y el servidor se crea tras confirmarse el pago.",
+                "Tienda y puente de aprovisionamiento entre Stripe y el panel de juegos. El cliente ve recursos exactos y fijos, y el servidor se crea tras confirmarse el pago.",
                 "Backend con Bun, Hono y Drizzle, y frontend en React, en inglés y español.",
                 "Lo opero sobre mi propia infraestructura, con monitorización privada y copias con simulacro de restauración.",
               ],
@@ -265,7 +265,7 @@ export const content: Record<Locale, Content> = {
               title: "Nutria",
               summary: "Planificación semanal de alimentación y ejercicio basada en evidencia, que aprende de datos reales de reloj, báscula y registro.",
               details: [
-                "Cada semana genera cinco documentos: plan de comidas con lista de la compra, desglose nutricional, plan de ejercicio, informe de progreso y hoja de registro para rellenar.",
+                "Cada semana genera el plan de comidas con lista de la compra, el desglose nutricional, el plan de ejercicio, el informe de progreso y una hoja de registro para rellenar.",
                 "Parte de datos de composición de USDA FoodData Central, del catálogo de Mercadona y de más de 45 artículos y guías con DOI verificado.",
               ],
               tags: ["Python", "Docker", "PDF"],
@@ -279,7 +279,7 @@ export const content: Record<Locale, Content> = {
             {
               id: "selfhosting",
               title: "Autoalojamiento y Linux",
-              summary: "El sistema donde vive este sitio: un servidor propio con servicios en Docker, detrás de un VPS de entrada y un túnel WireGuard.",
+              summary: "Servidor propio con servicios en Docker, detrás de un VPS de entrada y un túnel WireGuard. Este sitio corre ahí.",
               details: [
                 "Práctica continua de despliegue, administración de servidores y redes aplicada a servicios reales.",
                 "Aloja mis productos y webs, como CSMak, Kubo y Nutria, y webs para terceros, como Kebab Oriental y la Asociación Juvenil Gambito.",
@@ -364,7 +364,7 @@ export const content: Record<Locale, Content> = {
               title: "OTracker",
               summary: "Editor de imagen y vídeo de ptylabs que selecciona y sigue hasta seis objetos con SAM 2.1, enteramente en el navegador.",
               details: [
-                "El backend solo sirve el frontend, los modelos y WASM: sin subidas, sin base de datos y sin inferencia en el servidor.",
+                "El backend solo sirve el frontend, los modelos y WASM. No hay subidas, base de datos ni inferencia en el servidor.",
                 "Exporta PNG y WebP con alfa, WebM VP8 con alfa y MP4 H.264 con fondo de color.",
               ],
               tags: ["TypeScript", "WASM", "SAM 2.1"],
@@ -378,10 +378,10 @@ export const content: Record<Locale, Content> = {
             {
               id: "chess-stylometry",
               title: "Estilometría en ajedrez",
-              summary: "Trabajo de Fin de Grado: comprobar si una persona deja una huella reconocible al jugar, sin usar evaluaciones de motor.",
+              summary: "Trabajo de Fin de Grado que comprueba si una persona deja una huella reconocible al jugar, sin usar evaluaciones de motor.",
               details: [
-                "Pipeline completo: extracción de partidas, imágenes del tablero y mapas de tiempo de decisión, red siamesa con pérdida triplete e inferencia con banco de memoria.",
-                "Nota de 10/10 y propuesto a matrícula de honor. Los resultados son modestos y muestran señal: el artículo los detalla.",
+                "Pipeline completo con extracción de partidas, imágenes del tablero y mapas de tiempo de decisión, red siamesa con pérdida triplete e inferencia con banco de memoria.",
+                "Nota de 10/10 y propuesto a matrícula de honor. Los resultados son modestos y muestran señal, y el artículo los detalla.",
               ],
               tags: ["Python", "Aprendizaje métrico", "Redes siamesas"],
               links: [
@@ -395,7 +395,7 @@ export const content: Record<Locale, Content> = {
               summary: "Segundo puesto en Retos UPCT 2026 con un algoritmo heurístico para optimizar las rutas de recogida de residuos urbanos en Cartagena.",
               details: [
                 "El reto parte de datos realistas sobre contenedores y operativa, con el patrocinio de Lhicarsa, la concesionaria del servicio.",
-                "El enfoque es heurístico: aproximar buenas rutas en un problema demasiado grande para resolverlo de forma exacta.",
+                "El enfoque es heurístico, porque el problema es demasiado grande para resolverlo de forma exacta.",
               ],
               tags: ["Python", "Optimización", "Heurísticas"],
               links: [{ label: "Repositorio del reto", href: "https://github.com/ptylabs/PR-SmartEcoRutas-Solver" }],
@@ -410,9 +410,9 @@ export const content: Record<Locale, Content> = {
               title: "Diseño digital y microcontroladores",
               summary: "Prácticas de la carrera en VHDL sobre ZedBoard y en ensamblador para el PIC16F876A.",
               details: [
-                "Multiplicador secuencial en VHDL: buses de 18 y 24 bits, control mediante una máquina de estados y salida retenida hasta tener el resultado final, comprobado con testbench.",
+                "Multiplicador secuencial en VHDL con buses de 18 y 24 bits, control mediante una máquina de estados y salida retenida hasta tener el resultado final, comprobado con testbench.",
                 "Divisores de reloj, contadores, decodificadores y temporizadores sobre ZedBoard.",
-                "En el PIC: entrada y salida, tablas de consulta, USART y conversión analógica-digital.",
+                "Programas para el PIC con entrada y salida, tablas de consulta, USART y conversión analógica-digital.",
               ],
               tags: ["VHDL", "ZedBoard", "PIC16F876A", "Ensamblador"],
               links: [
@@ -472,11 +472,11 @@ export const content: Record<Locale, Content> = {
           id: "estilometria-ajedrez",
           title: "¿Deja huella una persona cuando juega al ajedrez?",
           date: "2026",
-          summary: "Resumen de mi Trabajo de Fin de Grado: estilometría a partir de imágenes del tablero y tiempos de decisión, sin motor de ajedrez.",
+          summary: "Resumen de mi Trabajo de Fin de Grado sobre estilometría a partir de imágenes del tablero y tiempos de decisión, sin motor de ajedrez.",
           body: [
-            { kind: "p", text: "Mi Trabajo de Fin de Grado, «Sistema de caracterización de estilometría en ajedrez basado en aprendizaje automático e imágenes compuestas», no plantea otro motor ni busca la mejor jugada. Parte de una pregunta más concreta: si una persona deja una huella reconocible cuando juega." },
+            { kind: "p", text: "Mi Trabajo de Fin de Grado, «Sistema de caracterización de estilometría en ajedrez basado en aprendizaje automático e imágenes compuestas», no plantea otro motor ni busca la mejor jugada. Se pregunta algo más concreto, si una persona deja una huella reconocible cuando juega." },
             { kind: "h2", text: "Planteamiento" },
-            { kind: "p", text: "El trabajo usa partidas de Lichess y tiene una restricción principal: nada de Stockfish ni de evaluaciones de motor como señal de entrada. El sistema solo ve lo que se observa directamente en la partida, en forma de imágenes del tablero y mapas de tiempo de decisión." },
+            { kind: "p", text: "El trabajo usa partidas de Lichess y tiene una restricción principal, que es no usar Stockfish ni evaluaciones de motor como señal de entrada. El sistema solo ve lo que se observa directamente en la partida, en forma de imágenes del tablero y mapas de tiempo de decisión." },
             { kind: "p", text: "Con eso se entrena una red siamesa con aprendizaje métrico y pérdida triplete, que produce embeddings de partidas para comparar la similitud entre jugadores." },
             { kind: "h2", text: "Sistema" },
             { kind: "p", text: "El pipeline cubre la extracción y el filtrado de partidas, la generación de imágenes, la normalización de la perspectiva del tablero, el entrenamiento y una inferencia basada en banco de memoria. Ese banco conserva varias partidas por jugador en vez de reducirlo todo a un promedio, lo que permite recuperar ejemplos cercanos y estudiar las confusiones del modelo." },
@@ -487,8 +487,8 @@ export const content: Record<Locale, Content> = {
               head: ["Evaluación", "Resultado", "Referencia"],
               numeric: [1],
               rows: [
-                ["Identificación con 10 jugadores", "Top-5 de 79,75 % a 82,25 %", "Top-5 al azar: 50 %"],
-                ["Identificación con 200 jugadores", "Top-1 de 2,05 %", "Top-1 al azar: 0,5 %"],
+                ["Identificación con 10 jugadores", "Top-5 de 79,75 % a 82,25 %", "50 % en Top-5 al azar"],
+                ["Identificación con 200 jugadores", "Top-1 de 2,05 %", "0,5 % en Top-1 al azar"],
                 ["Elo en crudo", "MAE de 329,0", "Predicciones comprimidas al centro"],
                 ["Elo calibrado", "MAE de 260,6", "Calibración lineal out-of-fold"],
                 ["Elo con 20 partidas", "MAE de unos 224", "Mejor método calibrado"],
@@ -497,7 +497,7 @@ export const content: Record<Locale, Content> = {
             { kind: "p", text: "Al ampliar a 200 jugadores la identificación exacta cae mucho, como era de esperar, aunque se queda unas cuatro veces por encima del azar. El modelo no se entrenó para estimar el Elo, pero el embedding contiene información sobre el nivel." },
             { kind: "h2", text: "Conclusión" },
             { kind: "p", text: "El sistema no es un identificador robusto de autoría ni pretende competir con métodos basados en motores. Sí es una primera implementación completa de un enfoque visual y temporal para comparar el comportamiento de los jugadores." },
-            { kind: "p", text: "Lo más valioso ha sido comprobar que hay señal aprovechable y entender mejor la dificultad del problema: estilo, nivel, color, fase de la partida, reloj y repertorio aparecen mezclados. Separar esos factores queda como trabajo futuro." },
+            { kind: "p", text: "Lo más valioso ha sido comprobar que hay señal aprovechable y entender mejor la dificultad del problema, porque estilo, nivel, color, fase de la partida, reloj y repertorio aparecen mezclados. Separar esos factores queda como trabajo futuro." },
           ],
           links: [{ label: "Código en GitHub", href: "https://github.com/andrewyernau/tfe_chess_stylometry" }],
         },
@@ -533,7 +533,7 @@ export const content: Record<Locale, Content> = {
         message: "El mensaje debe tener entre 10 y 5000 caracteres.",
       },
       limited: "Se han enviado demasiados mensajes desde tu conexión. Inténtalo dentro de una hora o escríbeme al correo de arriba.",
-      failure: "No se pudo enviar el mensaje. Tu texto sigue aquí: inténtalo de nuevo en unos minutos o escríbeme al correo de arriba.",
+      failure: "No se pudo enviar el mensaje. Tu texto sigue aquí, así que puedes intentarlo de nuevo en unos minutos o escribirme al correo de arriba.",
     },
   },
   en: {
@@ -558,7 +558,7 @@ export const content: Record<Locale, Content> = {
       description: "Telematics engineer and data engineer in Murcia, Spain. Real-time data, self-run infrastructure, telecommunications and hardware.",
       lede: "Telematics engineer. I work as a data engineer at Setenova and have run my own infrastructure since 2020.",
       paragraphs: [
-        "I studied at the Polytechnic University of Cartagena, with exchanges in Dublin and Malta. Today I work with real-time data: a computer-vision platform with more than 20 simultaneous cameras and 100 to 200 frames per second of metadata, deployed both on-premise and in the cloud.",
+        "I studied at the Polytechnic University of Cartagena. I have worked on a computer-vision platform for security and on smart-city projects, with many on-premise solutions.",
         "Outside work I run my own services on Linux, including two SaaS products. That is where I have learned most of what I know about keeping a system up, partly because it has broken on me more than once.",
         "I like automating what repeats and learning quickly what I don't know yet.",
       ],
@@ -566,7 +566,7 @@ export const content: Record<Locale, Content> = {
       areas: [
         { label: "Data", value: "Real-time flows with Kafka, PostgreSQL and S3 behind FastAPI. Airflow pipelines, medallion architecture and time-series techniques to age data." },
         { label: "Infrastructure", value: "Linux, Docker, HAProxy, OpenTofu and Prometheus. On-premise and cloud deployments, validated against an SLA and measurable objectives." },
-        { label: "Telecommunications", value: "The telecoms side of my degree: signals, radio links and propagation, multiple-access techniques, and networking with TCP/IP, MPLS and OSPF." },
+        { label: "Telecommunications", value: "What my degree covered on signals, radio links and propagation, multiple-access techniques, and networking with TCP/IP, MPLS and OSPF." },
         { label: "Hardware", value: "Digital design in VHDL on ZedBoard, assembly for the PIC16F876A, and embedded systems in MITRE's eCTF." },
         { label: "Software", value: "Python, Rust, TypeScript, Java, C and SQL. Developer tools, backend work and machine-learning experiments." },
       ],
@@ -606,15 +606,15 @@ export const content: Record<Locale, Content> = {
           title: "Self-hosted services on Linux",
           where: "Domains, SaaS products and sites I run myself",
           points: [
-            "Several domains and two products of my own: Kubo, game-server hosting, and Nutria, nutrition and training.",
+            "Several domains and two products of my own, Kubo for game-server hosting and Nutria for nutrition and training.",
             "Docker, HAProxy, Prometheus, OpenTofu, DNS, mail and Let's Encrypt certificates.",
-            "Two real outages, both recovered: a broken Node dependency, and a full game-hosting panel restored from backups. I found the cause and changed the process each time.",
+            "Two real outages, both recovered. One was a broken Node dependency and the other a full game-hosting panel that I restored from backups. I found the cause and changed the process each time.",
           ],
         },
       ],
       educationTitle: "Education",
       education: [
-        { when: "2021 to 2026", title: "BSc in Telematics Engineering", where: "Polytechnic University of Cartagena. Exchanges in Dublin and Malta.", text: "Bachelor's thesis on chess stylometry: 10/10 and proposed for honours." },
+        { when: "2021 to 2026", title: "BSc in Telematics Engineering", where: "Polytechnic University of Cartagena. Exchanges in Dublin and Malta.", text: "Bachelor's thesis on chess stylometry, graded 10/10 and proposed for honours." },
         { when: "2018 to 2024", title: "Professional Music Conservatory" },
       ],
       eventsTitle: "Events and recognition",
@@ -657,9 +657,9 @@ export const content: Record<Locale, Content> = {
             {
               id: "kubo",
               title: "Kubo",
-              summary: "Game-server hosting: Minecraft Java and Bedrock, cross-play between them, and PostgreSQL, Redis and MongoDB databases.",
+              summary: "Hosting for Minecraft Java and Bedrock servers, with cross-play between them, and PostgreSQL, Redis and MongoDB databases.",
               details: [
-                "A storefront and provisioning bridge between Stripe and the game panel: customers see exact, fixed resources, and the server is created once payment is confirmed.",
+                "A storefront and provisioning bridge between Stripe and the game panel. Customers see exact, fixed resources, and the server is created once payment is confirmed.",
                 "Backend with Bun, Hono and Drizzle, and a React frontend in English and Spanish.",
                 "I run it on my own infrastructure, with private monitoring and backups with a restore drill.",
               ],
@@ -671,7 +671,7 @@ export const content: Record<Locale, Content> = {
               title: "Nutria",
               summary: "Evidence-based weekly nutrition and training planning that learns from real data from a watch, a scale and a log.",
               details: [
-                "Every week it produces five documents: a meal plan with a shopping list, a nutrition breakdown, a training plan, a progress report and a log sheet to fill in.",
+                "Every week it produces a meal plan with a shopping list, a nutrition breakdown, a training plan, a progress report and a log sheet to fill in.",
                 "It draws on USDA FoodData Central composition data, the Mercadona catalogue and more than 45 papers and guidelines with verified DOIs.",
               ],
               tags: ["Python", "Docker", "PDF"],
@@ -685,7 +685,7 @@ export const content: Record<Locale, Content> = {
             {
               id: "selfhosting",
               title: "Self-hosting and Linux",
-              summary: "The system this site lives on: my own server with Docker services, behind an edge VPS and a WireGuard tunnel.",
+              summary: "My own server with Docker services, behind an edge VPS and a WireGuard tunnel. This site runs on it.",
               details: [
                 "An ongoing practice of deployment, server administration and networking on real services.",
                 "It runs my products and sites, such as CSMak, Kubo and Nutria, and sites for others, such as Kebab Oriental and the Gambito youth association.",
@@ -770,7 +770,7 @@ export const content: Record<Locale, Content> = {
               title: "OTracker",
               summary: "An image and video editor from ptylabs that selects and tracks up to six objects with SAM 2.1, entirely in the browser.",
               details: [
-                "The backend only serves the frontend, the models and WASM: no uploads, no database and no server-side inference.",
+                "The backend only serves the frontend, the models and WASM. There are no uploads, no database and no server-side inference.",
                 "Exports PNG and WebP with alpha, WebM VP8 with alpha, and MP4 H.264 with a coloured background.",
               ],
               tags: ["TypeScript", "WASM", "SAM 2.1"],
@@ -784,10 +784,10 @@ export const content: Record<Locale, Content> = {
             {
               id: "chess-stylometry",
               title: "Chess stylometry",
-              summary: "Bachelor's thesis: testing whether a person leaves a recognisable trace when playing, without engine evaluations.",
+              summary: "Bachelor's thesis testing whether a person leaves a recognisable trace when playing, without engine evaluations.",
               details: [
-                "A complete pipeline: game extraction, board images and decision-time maps, a Siamese network with triplet loss, and memory-bank inference.",
-                "Graded 10/10 and proposed for honours. The results are modest and show signal: the article has the details.",
+                "A complete pipeline with game extraction, board images and decision-time maps, a Siamese network with triplet loss, and memory-bank inference.",
+                "Graded 10/10 and proposed for honours. The results are modest and show signal, and the article has the details.",
               ],
               tags: ["Python", "Metric learning", "Siamese networks"],
               links: [
@@ -801,7 +801,7 @@ export const content: Record<Locale, Content> = {
               summary: "Second place in Retos UPCT 2026 with a heuristic algorithm to optimise urban waste-collection routes in Cartagena.",
               details: [
                 "The challenge uses realistic data on containers and operations, sponsored by Lhicarsa, the company that runs the service.",
-                "The approach is heuristic: approximating good routes in a problem too large to solve exactly.",
+                "The approach is heuristic, because the problem is too large to solve exactly.",
               ],
               tags: ["Python", "Optimisation", "Heuristics"],
               links: [{ label: "Challenge repository", href: "https://github.com/ptylabs/PR-SmartEcoRutas-Solver" }],
@@ -816,9 +816,9 @@ export const content: Record<Locale, Content> = {
               title: "Digital design and microcontrollers",
               summary: "Degree labs in VHDL on ZedBoard and in assembly for the PIC16F876A.",
               details: [
-                "A sequential multiplier in VHDL: 18 and 24-bit buses, control through a state machine and output held until the final result, verified with a testbench.",
+                "A sequential multiplier in VHDL with 18 and 24-bit buses, control through a state machine and output held until the final result, verified with a testbench.",
                 "Clock dividers, counters, decoders and timers on ZedBoard.",
-                "On the PIC: input and output, lookup tables, USART and analog-to-digital conversion.",
+                "PIC programs with input and output, lookup tables, USART and analog-to-digital conversion.",
               ],
               tags: ["VHDL", "ZedBoard", "PIC16F876A", "Assembly"],
               links: [
@@ -878,11 +878,11 @@ export const content: Record<Locale, Content> = {
           id: "estilometria-ajedrez",
           title: "Do people leave a trace when they play chess?",
           date: "2026",
-          summary: "A summary of my bachelor's thesis: stylometry from board images and decision times, without a chess engine.",
+          summary: "A summary of my bachelor's thesis on stylometry from board images and decision times, without a chess engine.",
           body: [
-            { kind: "p", text: "My bachelor's thesis, on characterising chess stylometry with machine learning and composite images, does not propose another engine or look for the best move. It starts from a narrower question: whether a person leaves a recognisable trace when playing." },
+            { kind: "p", text: "My bachelor's thesis, on characterising chess stylometry with machine learning and composite images, does not propose another engine or look for the best move. It asks something narrower, whether a person leaves a recognisable trace when playing." },
             { kind: "h2", text: "Approach" },
-            { kind: "p", text: "The work uses Lichess games and has one main restriction: no Stockfish and no engine evaluations as an input signal. The system only sees what can be observed directly in the game, as board images and decision-time maps." },
+            { kind: "p", text: "The work uses Lichess games and has one main restriction, which is not using Stockfish or engine evaluations as an input signal. The system only sees what can be observed directly in the game, as board images and decision-time maps." },
             { kind: "p", text: "These train a Siamese network with metric learning and triplet loss, which produces game embeddings to compare similarity between players." },
             { kind: "h2", text: "System" },
             { kind: "p", text: "The pipeline covers game extraction and filtering, image generation, board-perspective normalisation, training, and inference based on a memory bank. The bank keeps several games per player instead of reducing everything to an average, which makes it possible to retrieve close examples and study the model's confusions." },
@@ -893,8 +893,8 @@ export const content: Record<Locale, Content> = {
               head: ["Evaluation", "Result", "Reference"],
               numeric: [1],
               rows: [
-                ["Identification, 10 players", "Top-5 of 79.75% to 82.25%", "Random Top-5: 50%"],
-                ["Identification, 200 players", "Top-1 of 2.05%", "Random Top-1: 0.5%"],
+                ["Identification, 10 players", "Top-5 of 79.75% to 82.25%", "50% for random Top-5"],
+                ["Identification, 200 players", "Top-1 of 2.05%", "0.5% for random Top-1"],
                 ["Raw Elo", "MAE of 329.0", "Predictions compressed to the centre"],
                 ["Calibrated Elo", "MAE of 260.6", "Out-of-fold linear calibration"],
                 ["Elo over 20 games", "MAE of about 224", "Best calibrated method"],
@@ -903,7 +903,7 @@ export const content: Record<Locale, Content> = {
             { kind: "p", text: "With 200 players exact identification drops sharply, as expected, though it stays about four times above chance. The model was not trained to estimate Elo, but the embedding does carry information about playing level." },
             { kind: "h2", text: "Conclusion" },
             { kind: "p", text: "The system is not a robust authorship identifier and does not try to compete with engine-based methods. It is a complete first implementation of a visual and temporal approach to comparing how people play." },
-            { kind: "p", text: "The most valuable outcome is confirming that there is usable signal and understanding the problem better: style, level, colour, game phase, clock and repertoire are all mixed together. Separating those factors remains future work." },
+            { kind: "p", text: "The most valuable outcome is confirming that there is usable signal and understanding the problem better, because style, level, colour, game phase, clock and repertoire are all mixed together. Separating those factors remains future work." },
           ],
           links: [{ label: "Code on GitHub", href: "https://github.com/andrewyernau/tfe_chess_stylometry" }],
         },
@@ -939,7 +939,7 @@ export const content: Record<Locale, Content> = {
         message: "The message must be between 10 and 5000 characters.",
       },
       limited: "Too many messages have been sent from your connection. Try again in an hour or write to the address above.",
-      failure: "The message could not be sent. Your text is still here: try again in a few minutes or write to the address above.",
+      failure: "The message could not be sent. Your text is still here, so you can try again in a few minutes or write to the address above.",
     },
   },
 };

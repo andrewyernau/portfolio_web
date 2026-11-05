@@ -63,6 +63,14 @@ describe("pages", () => {
     }
   });
 
+  test("copy does not introduce phrases with a colon", async () => {
+    for (const path of allPages()) {
+      const html = await (await get(path)).text();
+      const text = html.replace(/<head>[\s\S]*?<\/head>/, "").replace(/<[^>]+>/g, " ");
+      expect(text).not.toMatch(/[\p{L}\d%]: \S/u);
+    }
+  });
+
   test("keeps project and article links inside the locale", async () => {
     for (const locale of ["es", "en"] as Locale[]) {
       const links = content[locale].projects.groups.flatMap((g) => g.projects.flatMap((p) => p.links ?? []));
