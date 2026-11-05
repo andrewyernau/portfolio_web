@@ -26,7 +26,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-bun
-      - run: bun audit
+      # GHSA-67mh-4wv8-2f99 needs esbuild's dev server. It only arrives through drizzle-kit, a
+      # development tool that never starts that server and stays out of the production image.
+      - run: bun audit --ignore=GHSA-67mh-4wv8-2f99
 
   codeql:
     runs-on: ubuntu-latest
